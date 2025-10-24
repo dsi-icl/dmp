@@ -25,7 +25,8 @@
             "colddata_collection": "COLDDATA_COLLECTION",
             "domains_collection": "DOMAIN_COLLECTION",
             "webauthn_collection": "WEBAUTHN_COLLECTION",
-            "instance_collection": "INSTANCE_COLLECTION"
+            "instance_collection": "INSTANCE_COLLECTION",
+            "page_collection": "PAGE_COLLECTION"
         }
     },
     "server": {
@@ -63,7 +64,7 @@
     "lxdStoragePool": "newpool",
     "lxdProject": "ideafast-staging",
     "webdavServer": "http://localhost",
-    "systemKey":{
+    "systemKey": {
         "pubkey": "path/system_key.pub",
         "privkey": "path/system_key.pem"
     },
@@ -77,5 +78,4 @@
         "host": "localhost",
         "port": 3080
     }
-    
 }

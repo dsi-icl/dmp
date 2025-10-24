@@ -148,6 +148,15 @@ const collections = {
             { key: { id: 1 }, unique: true },
             { key: { userId: 1 }, unique: false }
         ]
+    },
+    page_collection: {
+        name: 'PAGE_COLLECTION',
+        indexes: [
+            { key: { id: 1 }, unique: true },
+            { key: { slug: 1 }, unique: true },
+            { key: { status: 1 }, unique: false },
+            { key: { createdBy: 1 }, unique: false }
+        ]
     }
 };
 

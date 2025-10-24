@@ -94,6 +94,11 @@ export class FileCore {
             fileConfig = config ? config.properties as IDomainConfig : defaultSettings.domainConfig;
             fileSizeLimit = (fileConfig as IDomainConfig).defaultMaximumFileSize;
             defaultFileBucketId = (fileConfig as IDomainConfig).defaultFileBucketId;
+        } else if (fileCategory === enumFileCategories.PAGE_MEDIA_FILE) {
+            const config = await this.db.collections.configs_collection.findOne({ type: enumConfigType.SYSTEMCONFIG, key: null });
+            fileConfig = config ? config.properties as ISystemConfig : defaultSettings.systemConfig;
+            fileSizeLimit = (fileConfig as ISystemConfig).defaultMaximumFileSize;
+            defaultFileBucketId = 'media'; // Use media bucket for page media
         } else {
             throw new CoreError(
                 enumCoreErrors.CLIENT_MALFORMED_INPUT,

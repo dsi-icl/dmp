@@ -27,3 +27,4 @@ export * from './coreFunc/webauthnCore';
 // instance, lxd, Analystic Environment
 export * from './coreFunc/instanceCore';
 export * from './lxd/lxdManager';
+export * from './coreFunc/pageCore';

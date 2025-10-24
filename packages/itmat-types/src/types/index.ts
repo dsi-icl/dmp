@@ -22,7 +22,7 @@ import * as Domain from './domain';
 import * as WebAuthn from './webauthn';
 import * as Instance from './instance';
 import * as Lxd from './lxd';
-
+import * as Page from './page';
 export * from './field';
 export * from './file';
 export * from './job';
@@ -47,5 +47,5 @@ export * from './domain';
 export * from './webauthn';
 export * from './instance';
 export * from './lxd';
-
-export const Types = { File, Job, Log, User, Organisation, Pubkey, Study, Query, Field, Data, Standardization, Common, Base, CoreErrors, Config, ZodSchema, Utils, Drive, Permission, Cache, Domain, WebAuthn, Instance, Lxd};
+export * from './page';
+export const Types = { File, Job, Log, User, Organisation, Pubkey, Study, Query, Field, Data, Standardization, Common, Base, CoreErrors, Config, ZodSchema, Utils, Drive, Permission, Cache, Domain, WebAuthn, Instance, Lxd, Page };

@@ -30,6 +30,7 @@ export enum enumFileTypes {
     XLSX = 'XLSX',
     XLS = 'XLS',
     MAT = 'MAT',
+    NPY = 'NPY',
     // images
     JPG = 'JPG',
     JPEG = 'JPEG',
@@ -49,7 +50,8 @@ export enum enumFileCategories {
     DOC_FILE = 'DOC_FILE',
     CACHE = 'CACHE',
     PROFILE_FILE = 'DOMAIN_PROFILE_FILE',
-    DOMAIN_FILE = 'DOMAIN_FILE'
+    DOMAIN_FILE = 'DOMAIN_FILE',
+    PAGE_MEDIA_FILE = 'PAGE_MEDIA_FILE'
 }
 
 export interface FileUpload {

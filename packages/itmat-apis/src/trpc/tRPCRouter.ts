@@ -11,6 +11,7 @@ import { UserRouter } from './userProcedure';
 import { WebAuthnRouter } from './webauthnProcedure';
 import { InstanceRouter } from './instanceProcedure';
 import { LXDRouter } from './lxdProcedure';
+import { PageRouter } from './pageProcedure';
 
 
 export class TRPCAggRouter {
@@ -27,8 +28,8 @@ export class TRPCAggRouter {
     webAuthnRouter: WebAuthnRouter;
     instanceRouter: InstanceRouter;
     lxdRouter: LXDRouter;
-
-    constructor(router: TRPCRouter, userRouter: UserRouter, driveRouter: DriveRouter, studyRouter: StudyRouter, dataRouter: DataRouter, roleRouter: RoleRouter, configRouter: ConfigRouter, logRouter: LogRouter, domainRouter: DomainRouter, organisationRouter: OrganisationRouter, webAuthnRouter: WebAuthnRouter, instanceRouter: InstanceRouter, lxdRouter: LXDRouter) {
+    pageRouter: PageRouter;
+    constructor(router: TRPCRouter, userRouter: UserRouter, driveRouter: DriveRouter, studyRouter: StudyRouter, dataRouter: DataRouter, roleRouter: RoleRouter, configRouter: ConfigRouter, logRouter: LogRouter, domainRouter: DomainRouter, organisationRouter: OrganisationRouter, webAuthnRouter: WebAuthnRouter, instanceRouter: InstanceRouter, lxdRouter: LXDRouter, pageRouter: PageRouter) {
         this.router = router;
         this.userRouter = userRouter;
         this.driveRouter = driveRouter;
@@ -42,6 +43,7 @@ export class TRPCAggRouter {
         this.webAuthnRouter = webAuthnRouter;
         this.instanceRouter = instanceRouter;
         this.lxdRouter = lxdRouter;
+        this.pageRouter = pageRouter;
     }
 
     _routers() {
@@ -57,7 +59,8 @@ export class TRPCAggRouter {
             organisation: this.organisationRouter._router(),
             webauthn: this.webAuthnRouter._router(),
             instance: this.instanceRouter._router(),
-            lxd: this.lxdRouter._router()
+            lxd: this.lxdRouter._router(),
+            page: this.pageRouter._router()
         });
     }
 }

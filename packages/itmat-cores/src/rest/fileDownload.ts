@@ -130,6 +130,8 @@ export class FileDownloadController {
                     buckerId = defaultSettings.domainConfig.defaultFileBucketId;
                 } else if (file.fileCategory === enumFileCategories.PROFILE_FILE) {
                     buckerId = defaultSettings.systemConfig.defaultProfileBucketId;
+                } else if (file.fileCategory === enumFileCategories.PAGE_MEDIA_FILE) {
+                    buckerId = 'media';
                 }
                 await this._db.collections.log_collection.insertOne({
                     ...log,

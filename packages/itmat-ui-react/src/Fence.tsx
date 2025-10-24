@@ -15,7 +15,7 @@ import { WebAuthnRegistrationComponent } from './utils/dmpWebauthn/webauthn.regi
 import { WebAuthnAuthenticationComponent } from './utils/dmpWebauthn/webauthn.authenticate';
 import { DeviceNicknameComponent } from './utils/dmpWebauthn/webuathn.nickname';
 import { useAuth } from './utils/dmpWebauthn/webauthn.context';
-
+import { PageDisplay } from './components/pagesDashboard/PageDisplay';
 
 export const Fence: FunctionComponent = () => {
     const {
@@ -69,6 +69,7 @@ export const Fence: FunctionComponent = () => {
             <Route path='/register_webauthn' element={<WebAuthnRegistrationComponent />} />
             <Route path='/authenticate_webauthn' element={<WebAuthnAuthenticationComponent />} />
             <Route path='/nickname_webauthn' element={<DeviceNicknameComponent />} />
+            <Route path='/pages/:slug' element={isUserLogin ? <PageDisplay /> : <LoginBox />} />
             <Route path='*' element={component} />
         </Routes>
     );

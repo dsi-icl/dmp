@@ -20,7 +20,9 @@ const GUEST_ALLOWED_OPERATIONS = [
     'config.getConfig',
     'domain.getCurrentDomain',
     'domain.getCurrentSubPath',
-    'organisation.getOrganisations'
+    'organisation.getOrganisations',
+    'page.getPages',
+    'page.getPageById'
 
 ];
 

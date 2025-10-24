@@ -1,6 +1,6 @@
-import { ConfigRouter, DataRouter, DomainRouter, DriveRouter, FileResolvers, GraphQLResolvers, JobResolvers, LogResolvers, LogRouter, OrganisationResolvers, OrganisationRouter, PermissionResolvers, PubkeyResolvers, RoleRouter, StandardizationResolvers, StudyResolvers, StudyRouter, TRPCAggRouter, UserResolvers, UserRouter, tRPCBaseProcedureMilldeware, WebAuthnRouter, InstanceRouter, LXDRouter } from '@itmat-broker/itmat-apis';
+import { ConfigRouter, DataRouter, DomainRouter, DriveRouter, FileResolvers, GraphQLResolvers, JobResolvers, LogResolvers, LogRouter, OrganisationResolvers, OrganisationRouter, PermissionResolvers, PubkeyResolvers, RoleRouter, StandardizationResolvers, StudyResolvers, StudyRouter, TRPCAggRouter, UserResolvers, UserRouter, tRPCBaseProcedureMilldeware, WebAuthnRouter, InstanceRouter, LXDRouter, PageRouter } from '@itmat-broker/itmat-apis';
 import { db } from '../database/database';
-import { ConfigCore, DataCore, DataTransformationCore, DomainCore, DriveCore, FileCore, LogCore, OrganisationCore, PermissionCore, StandarizationCore, StudyCore, UserCore, UtilsCore, WebauthnCore, JobCore, InstanceCore, LxdManager } from '@itmat-broker/itmat-cores';
+import { ConfigCore, DataCore, DataTransformationCore, DomainCore, DriveCore, FileCore, LogCore, OrganisationCore, PermissionCore, StandarizationCore, StudyCore, UserCore, UtilsCore, WebauthnCore, JobCore, InstanceCore, LxdManager, PageCore } from '@itmat-broker/itmat-cores';
 import { objStore } from '../objStore/objStore';
 import { mailer } from '../emailer/emailer';
 import configManager from '../utils/configManager';
@@ -25,6 +25,7 @@ export class APICalls {
     jobCore: JobCore;
     instanceCore: InstanceCore;
     lxdManager: LxdManager;
+    pageCore: PageCore;
     constructor() {
         this.permissionCore = new PermissionCore(db);
         this.fileCore = new FileCore(db, objStore);
@@ -43,6 +44,7 @@ export class APICalls {
         this.jobCore = new JobCore(db);
         this.instanceCore = new InstanceCore(db, mailer, configManager, this.jobCore, this.userCore);
         this.lxdManager = new LxdManager(configManager);
+        this.pageCore = new PageCore(db, objStore);
     }
 
     _listOfGraphqlResolvers() {
@@ -90,7 +92,8 @@ export class APICalls {
             new OrganisationRouter(baseProcedure, router, this.organisationCore),
             new WebAuthnRouter(baseProcedure, router, this.webauthnCore),
             new InstanceRouter(baseProcedure, router, this.instanceCore),
-            new LXDRouter(baseProcedure, router, this.lxdManager)
+            new LXDRouter(baseProcedure, router, this.lxdManager),
+            new PageRouter(baseProcedure, router, this.pageCore)
         ))._routers();
     }
 }

@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { NavLink } from 'react-router-dom';
 import { enumUserTypes } from '@itmat-broker/itmat-types';
 import css from './scaffold.module.css';
-import { DatabaseOutlined, TeamOutlined, PoweroffOutlined, HistoryOutlined, SettingOutlined, DesktopOutlined, WarningTwoTone, CloudOutlined, ApartmentOutlined, ClusterOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, TeamOutlined, PoweroffOutlined, HistoryOutlined, SettingOutlined, DesktopOutlined, WarningTwoTone, CloudOutlined, ApartmentOutlined, ClusterOutlined, ExclamationCircleOutlined, AppstoreOutlined, FileTextOutlined } from '@ant-design/icons';
 import LoadSpinner from '../reusable/loadSpinner';
 import dayjs from 'dayjs';
 import { Collapse, Tooltip } from 'antd';
@@ -34,7 +34,7 @@ export const MainMenuBar: FunctionComponent = () => {
     return <div className={css.main_menubar}>
         <div>
             <NavLink to='/datasets' title='Datasets' className={({ isActive }) => isActive ? css.clickedButton : undefined}>
-                <div className={css.button}><DatabaseOutlined /> Datasets</div>
+                <div className={css.button}> <DatabaseOutlined /> Datasets</div>
             </NavLink>
         </div>
         <div>
@@ -64,6 +64,11 @@ export const MainMenuBar: FunctionComponent = () => {
                 </div>
             </NavLink >
         </div >
+        <div>
+            <NavLink to='/pages' title='Dashboard' className={({ isActive }) => isActive ? css.clickedButton : undefined}>
+                <div className={css.button}>  <AppstoreOutlined />Dashboard</div>
+            </NavLink>
+        </div>
         {
             (whoAmI.data.type !== enumUserTypes.GUEST) ?
                 <div>
@@ -75,6 +80,11 @@ export const MainMenuBar: FunctionComponent = () => {
                     <div>
                         <NavLink to='/instances' title='Analytical Environment' className={({ isActive }) => isActive ? css.clickedButton : undefined}>
                             <div className={css.button}><DesktopOutlined /> Analytical Environment</div>
+                        </NavLink>
+                    </div>
+                    <div>
+                        <NavLink to='/pageeditor/pages' title='Page Editor' className={({ isActive }) => isActive ? css.clickedButton : undefined}>
+                            <div className={css.button}> <FileTextOutlined />Page Editor</div>
                         </NavLink>
                     </div>
                 </div>

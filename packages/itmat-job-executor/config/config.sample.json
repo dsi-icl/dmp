@@ -1,4 +1,4 @@
-{   
+{
     "appName": "ITMAT Job Executor",
     "database": {
         "mongo_url": "mongodb://localhost:27017",
@@ -26,7 +26,8 @@
             "colddata_collection": "COLDDATA_COLLECTION",
             "domains_collection": "DOMAIN_COLLECTION",
             "webauthn_collection": "WEBAUTHN_COLLECTION",
-            "instance_collection": "INSTANCE_COLLECTION"
+            "instance_collection": "INSTANCE_COLLECTION",
+            "page_collection": "PAGE_COLLECTION"
         }
     },
     "server": {
@@ -57,7 +58,6 @@
     "webdavPort": 1900,
     "webdavServer": "http://localhost:4200/webdav",
     "pollingInterval": 10000,
-
     "lxdEndpoint": "https://localhost:8443",
     "lxdPortRange": [
         30000,
@@ -66,7 +66,7 @@
     "lxdSquidProxy": "traget_ip:3128",
     "lxdStoragePool": "newpool",
     "lxdProject": "default",
-    "systemKey":{
+    "systemKey": {
         "pubkey": "path/system_key.pub",
         "privkey": "path/system_key.pem"
     },

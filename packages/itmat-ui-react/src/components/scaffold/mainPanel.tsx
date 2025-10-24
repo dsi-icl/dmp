@@ -12,6 +12,8 @@ import { OrganisationPage } from '../organisation';
 import { InstancePage } from '../instance';
 import { LXDPage } from '../lxd';
 import { ProtectedRoute } from '../reusable/protectedRoute/protectedRoute';
+import { PageEditorLayout } from '../pageEditor/PageEditorLayout';
+import { PublicPagesList } from '../pagesDashboard/PageList';
 
 export const MainPanel: FunctionComponent = () => {
     return (
@@ -34,9 +36,11 @@ export const MainPanel: FunctionComponent = () => {
                     <Route path='/pun/sys/dashboard' />
                     <Route path='/instances' element={<InstancePage />} />
                     <Route path='/lxd' element={<LXDPage />} />
+                    <Route path='/pageeditor/pages' element={<PageEditorLayout />} />
                 </Route>
                 <Route path='/profile' element={<ProfilePage />} />
                 <Route path='*' element={<Navigate to='/datasets' />} />
+                <Route path="/pages" element={<PublicPagesList />} />
             </Routes>
         </div>
     );
