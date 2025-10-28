@@ -20,7 +20,6 @@
                 "polyfills": "packages/itmat-ui-react/src/polyfills.ts",
                 "tsConfig": "packages/itmat-ui-react/tsconfig.app.json",
                 "assets": [
-                    "packages/itmat-ui-react/src/favicon.ico",
                     "packages/itmat-ui-react/src/assets"
                 ],
                 "styles": [
