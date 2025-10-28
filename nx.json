@@ -61,7 +61,7 @@
     },
     "defaultProject": "itmat-ui-react",
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
-    "defaultBase": "master",
+    "defaultBase": "develop",
     "useInferencePlugins": false,
     "nxCloudAccessToken": "YzA0MTA2MTEtNWRkNC00Y2QzLWFhYTItZDE0YjkxMDVlOGMwfHJlYWQtd3JpdGU=",
     "useLegacyCache": true
