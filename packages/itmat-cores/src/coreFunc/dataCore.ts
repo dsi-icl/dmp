@@ -1823,7 +1823,7 @@ export class DataCore {
     }
 
     /**
-     * Delete a file from Id. Note this is a function used for GraphQL
+     * Delete a file from Id.
      *
      * @param requester - The requester.
      * @param fileId - The id of the file.

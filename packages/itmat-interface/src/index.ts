@@ -67,9 +67,6 @@ function serverSpinning() {
         interfaceSockets = [];
         interfaceServer.close(() => {
             console.info(`Shuting down api server ${process.pid} ...`);
-            interfaceRouter?.on('close', () => {
-                serverStart();
-            });
             serverStart();
         });
     } else {

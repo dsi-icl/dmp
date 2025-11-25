@@ -16,6 +16,7 @@ import config from '../../config/config.sample.json';
 import { v4 as uuid } from 'uuid';
 import { enumUserTypes, enumStudyRoles, enumCoreErrors } from '@itmat-broker/itmat-types';
 import { encodeQueryParams } from './helper';
+import { getRequiredMinioPort } from './types';
 
 if (global.hasMinio) {
     let app: Express;
@@ -50,7 +51,7 @@ if (global.hasMinio) {
         const connectionString = mongodb.getUri();
         await setupDatabase(connectionString, dbName);
         /* Wiring up the backend server */
-        config.objectStore.port = (global as any).minioContainerPort;
+        config.objectStore.port = getRequiredMinioPort();
         config.database.mongo_url = connectionString;
         config.database.database = dbName;
         await db.connect(config.database, MongoClient);

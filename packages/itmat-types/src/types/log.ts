@@ -13,7 +13,6 @@ export interface ILog extends IBase {
 
 export enum enumAPIResolver {
     'tRPC' = 'tRPC',
-    'GraphQL' = 'GraphQL',
     'FILE' = 'FILE'
 }
 

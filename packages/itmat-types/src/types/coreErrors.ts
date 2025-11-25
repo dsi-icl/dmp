@@ -31,9 +31,8 @@ export enum enumRequestErrorCodes {
 }
 
 /**
- * This is to keep the consitency of the GraphQL error codes and tRPC error codes.
- * If possible, merge it in future.
- */
+ * This is a unified error class for all core errors.
+*/
 export class CoreError extends TRPCError {
     errorCode: enumCoreErrors;
     constructor(errorCode: enumCoreErrors, message: string, httpErrorCode: (typeof TRPCError.prototype)['code'] = 'BAD_REQUEST') {

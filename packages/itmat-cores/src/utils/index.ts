@@ -1,4 +1,3 @@
-export * from './ApolloServerContext';
 export * from './configManager';
 export * from './definition';
 export * from './errors';
@@ -7,7 +6,6 @@ export * from './noop';
 export * from './pubkeycrypto';
 export * from './pubsub';
 export * from './query';
-export * from './regrex';
 export * from './responses';
 export * from './server';
 export * from './userLoginUtils';

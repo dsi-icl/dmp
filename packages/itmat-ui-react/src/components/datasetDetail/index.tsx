@@ -1,8 +1,6 @@
 import { FunctionComponent } from 'react';
-import { Query } from '@apollo/client/react/components';
 import { NavLink, Route, Routes, useParams, Navigate } from 'react-router-dom';
-import { WHO_AM_I } from '@itmat-broker/itmat-models';
-import { IUserWithoutToken, enumUserTypes } from '@itmat-broker/itmat-types';
+import { enumUserTypes } from '@itmat-broker/itmat-types';
 import LoadSpinner from '../reusable/loadSpinner';
 import css from './projectPage.module.css';
 import { DashboardTabContent, AdminTabContent } from './tabContent';
@@ -15,11 +13,12 @@ export const DatasetDetailPage: FunctionComponent = () => {
     if (!studyId)
         return <LoadSpinner />;
     const getStudy = trpc.study.getStudies.useQuery({ studyId });
+    const whoAmI = trpc.user.whoAmI.useQuery();
 
     if (getStudy.isLoading) {
         return <LoadSpinner />;
     }
-    if (getStudy.isError) {
+    if (getStudy.isError || whoAmI.isError) {
         return <>
             An error occured.
         </>;
@@ -31,27 +30,19 @@ export const DatasetDetailPage: FunctionComponent = () => {
         <div className={css.ariane}>
             <h2>{getStudy.data[0].name.toUpperCase()}</h2>
             <div className={css.tabs}>
-                <Query<{ whoAmI: IUserWithoutToken }, never> query={WHO_AM_I}>
-                    {({ loading, error, data: sessionData }) => {
-                        if (loading) return <LoadSpinner />;
-                        if (error) return <p>{error.toString()}</p>;
-                        if (!sessionData) { return null; }
-                        if (sessionData.whoAmI.type === enumUserTypes.ADMIN) {
-                            return (
-                                <>
-                                    <NavLink to='config' className={({ isActive }) => isActive ? css.active : undefined}>CONFIG</NavLink>
-                                    <NavLink to='dashboard' className={({ isActive }) => isActive ? css.active : undefined}>DASHBOARD</NavLink>
-                                    <NavLink to='files' className={({ isActive }) => isActive ? css.active : undefined}>FILES REPOSITORY</NavLink>
-                                    <NavLink to='admin' className={({ isActive }) => isActive ? css.active : undefined}>ADMINISTRATION</NavLink>
-                                </>
-                            );
-                        } else {
-                            return (
-                                <NavLink to={'files'} className={({ isActive }) => isActive ? css.active : undefined}>FILES REPOSITORY</NavLink>
-                            );
-                        }
-                    }}
-                </Query >
+                {
+                    whoAmI.isLoading ? <LoadSpinner /> :
+                        whoAmI.data?.type === enumUserTypes.ADMIN ? (
+                            <>
+                                <NavLink to='config' className={({ isActive }) => isActive ? css.active : undefined}>CONFIG</NavLink>
+                                <NavLink to='dashboard' className={({ isActive }) => isActive ? css.active : undefined}>DASHBOARD</NavLink>
+                                <NavLink to='files' className={({ isActive }) => isActive ? css.active : undefined}>FILES REPOSITORY</NavLink>
+                                <NavLink to='admin' className={({ isActive }) => isActive ? css.active : undefined}>ADMINISTRATION</NavLink>
+                            </>
+                        ) : (
+                            <NavLink to={'files'} className={({ isActive }) => isActive ? css.active : undefined}>FILES REPOSITORY</NavLink>
+                        )
+                }
             </div >
         </div >
         <div className={css.content}>

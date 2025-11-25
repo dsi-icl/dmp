@@ -1,41 +1,7 @@
-import { StrictMode, useState } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import registerServiceWorker, { unregister as unregisterServiceWorker } from './registerServiceWorker';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { trpc } from './utils/trpc';
-import { httpLink } from '@trpc/client';
-
-const AppWithTRPC = () => {
-    const [queryClient] = useState(() => new QueryClient({
-        defaultOptions: {
-            queries: {
-                refetchOnWindowFocus: false
-            }
-        }
-    }));
-    const [trpcClient] = useState(() =>
-        trpc.createClient({
-            links: [
-                httpLink({
-                    url: `${window.location.origin}/trpc`,
-                    async headers() {
-                        return {
-                            authorization: document.cookie
-                        };
-                    }
-                })
-            ]
-        })
-    );
-    return (
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-            <QueryClientProvider client={queryClient}>
-                <App />
-            </QueryClientProvider>
-        </trpc.Provider>
-    );
-};
 
 const mountApp = () => {
     const container = document.getElementById('root');
@@ -44,7 +10,7 @@ const mountApp = () => {
     const root = createRoot(container);
     root.render(
         <StrictMode>
-            <AppWithTRPC />
+            <App />
         </StrictMode>
     );
 };
