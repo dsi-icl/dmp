@@ -23,21 +23,21 @@ To make our life easier, we use [Yarn](https://yarnpkg.com/) a lot. Make sure yo
 
 This software requires both MongoDB and MinIO to be available. Follow the installation guidelines for these software directly from their respective websites:
 
--   [https://docs.mongodb.com](https://docs.mongodb.com/manual/installation/)
--   [https://docs.min.io](https://docs.min.io/docs/minio-quickstart-guide.html)
+- [https://docs.mongodb.com](https://docs.mongodb.com/manual/installation/)
+- [https://docs.min.io](https://docs.min.io/docs/minio-quickstart-guide.html)
 
 ### Install dependencies and build the project
 
 Building the library is easy. First run `yarn install && yarn build`, to build the application. The current application is built ontop of a system called ICL-ITMAT-Broker comprised of multiple components including :
 
--   itmat-commons
--   itmat-docker
--   itmat-interface
--   itmat-job-executor
--   itmat-models
--   itmat-setup
--   itmat-types
--   itmat-ui-react
+- itmat-commons
+- itmat-docker
+- itmat-interface
+- itmat-job-executor
+- itmat-models
+- itmat-setup
+- itmat-types
+- itmat-ui-react
 
 ### Requirements bootstrap (quick treatment)
 
