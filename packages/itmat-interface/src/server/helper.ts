@@ -1,4 +1,4 @@
-import { ConfigRouter, DataRouter, DomainRouter, DriveRouter, FileResolvers, GraphQLResolvers, JobResolvers, LogResolvers, LogRouter, OrganisationResolvers, OrganisationRouter, PermissionResolvers, PubkeyResolvers, RoleRouter, StandardizationResolvers, StudyResolvers, StudyRouter, TRPCAggRouter, UserResolvers, UserRouter, tRPCBaseProcedureMilldeware, WebAuthnRouter, InstanceRouter, LXDRouter } from '@itmat-broker/itmat-apis';
+import { ConfigRouter, DataRouter, DomainRouter, DriveRouter, LogRouter, OrganisationRouter, RoleRouter, StudyRouter, TRPCAggRouter, UserRouter, tRPCBaseProcedureMilldeware, WebAuthnRouter, InstanceRouter, LXDRouter } from '@itmat-broker/itmat-apis';
 import { db } from '../database/database';
 import { ConfigCore, DataCore, DataTransformationCore, DomainCore, DriveCore, FileCore, LogCore, OrganisationCore, PermissionCore, StandarizationCore, StudyCore, UserCore, UtilsCore, WebauthnCore, JobCore, InstanceCore, LxdManager } from '@itmat-broker/itmat-cores';
 import { objStore } from '../objStore/objStore';
@@ -43,20 +43,6 @@ export class APICalls {
         this.jobCore = new JobCore(db);
         this.instanceCore = new InstanceCore(db, mailer, configManager, this.jobCore, this.userCore);
         this.lxdManager = new LxdManager(configManager);
-    }
-
-    _listOfGraphqlResolvers() {
-        return (new GraphQLResolvers(
-            new StudyResolvers(db, this.studyCore, this.dataCore, this.permissionCore),
-            new UserResolvers(db, this.userCore, this.permissionCore),
-            new PermissionResolvers(this.permissionCore),
-            new JobResolvers(),
-            new FileResolvers(db, this.dataCore),
-            new OrganisationResolvers(this.organisationCore),
-            new PubkeyResolvers(this.userCore),
-            new LogResolvers(this.logCore),
-            new StandardizationResolvers(this.standardizationCore)
-        ))._resolvers();
     }
 
     _listOfTRPCRouters() {

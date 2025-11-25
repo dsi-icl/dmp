@@ -24,7 +24,8 @@ import {
     PublicKeyCredentialCreationOptionsJSON
 } from '@simplewebauthn/types';
 
-import { WebauthnCore} from '@itmat-broker/itmat-cores';
+import { WebauthnCore } from '@itmat-broker/itmat-cores';
+import { getRequiredMinioPort } from './types';
 
 
 if (global.hasMinio) { // eslint-disable-line no-undef
@@ -45,7 +46,7 @@ if (global.hasMinio) { // eslint-disable-line no-undef
         const connectionString = mongodb.getUri();
         await setupDatabase(connectionString, dbName);
 
-        config.objectStore.port = global.minioContainerPort;
+        config.objectStore.port = getRequiredMinioPort();
         config.database.mongo_url = connectionString;
         config.database.database = dbName;
 

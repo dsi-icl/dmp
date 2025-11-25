@@ -17,6 +17,7 @@ import { v4 as uuid } from 'uuid';
 import { IOrganisation, enumUserTypes } from '@itmat-broker/itmat-types';
 import { encodeQueryParams } from './helper';
 import { errorCodes } from '@itmat-broker/itmat-cores';
+import { getRequiredMinioPort } from './types';
 
 
 if (global.hasMinio) {
@@ -47,7 +48,7 @@ if (global.hasMinio) {
         const connectionString = mongodb.getUri();
         await setupDatabase(connectionString, dbName);
         /* Wiring up the backend server */
-        config.objectStore.port = global.minioContainerPort;
+        config.objectStore.port = getRequiredMinioPort();
         config.database.mongo_url = connectionString;
         config.database.database = dbName;
         await db.connect(config.database, MongoClient);

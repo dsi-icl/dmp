@@ -17,7 +17,8 @@ import { v4 as uuid } from 'uuid';
 import { Express } from 'express';
 import { IUser, enumUserTypes, LXDInstanceTypeEnum, enumAppType, enumOpeType, enumInstanceStatus } from '@itmat-broker/itmat-types';
 import { Db, MongoClient } from 'mongodb';
-import {JobCore, UserCore} from '@itmat-broker/itmat-cores';
+import { JobCore, UserCore } from '@itmat-broker/itmat-cores';
+import { getRequiredMinioPort } from './types';
 
 
 jest.mock('nodemailer', () => {
@@ -49,7 +50,7 @@ if (global.hasMinio) { // eslint-disable-line no-undef
         const connectionString = mongodb.getUri();
         await setupDatabase(connectionString, dbName);
 
-        config.objectStore.port = global.minioContainerPort;
+        config.objectStore.port = getRequiredMinioPort();
         config.database.mongo_url = connectionString;
         config.database.database = dbName;
 

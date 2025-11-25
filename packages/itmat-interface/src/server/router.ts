@@ -1,11 +1,4 @@
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import { graphqlUploadExpress, GraphQLUpload } from 'graphql-upload-minimal';
-import { execute, subscribe } from 'graphql';
 import { WebSocketServer } from 'ws';
-import { useServer } from 'graphql-ws/use/ws';
-import { makeExecutableSchema } from '@graphql-tools/schema';
 import MongoStore from 'connect-mongo';
 import express from 'express';
 import { Express } from 'express';
@@ -16,19 +9,17 @@ import http from 'node:http';
 import passport from 'passport';
 import { db } from '../database/database';
 import { fileDownloadControllerInstance } from '../rest/fileDownload';
-import { BigIntResolver as scalarResolvers } from 'graphql-scalars';
 import 'json-bigint-patch';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { FileUploadSchema, IUserConfig, enumConfigType, enumUserTypes } from '@itmat-broker/itmat-types';
-import { logPluginInstance } from '../log/logPlugin';
-import { IConfiguration, spaceFixing } from '@itmat-broker/itmat-cores';
+import { IConfiguration } from '@itmat-broker/itmat-cores';
 import { userLoginUtils } from '../utils/userLoginUtils';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { tokenAuthentication, uploadFileData } from './commonMiddleware';
 import multer from 'multer';
 import { Readable } from 'stream';
 import { z } from 'zod';
-import { ApolloServerContext, DMPContext, createtRPCContext, typeDefs } from '@itmat-broker/itmat-apis';
+import { createtRPCContext } from '@itmat-broker/itmat-apis';
 import { APICalls } from './helper';
 import { registerContainSocketServer, registerJupyterSocketServer, jupyterProxyMiddleware, vncProxyMiddleware, registerVNCSocketServer, initializeProxyCacheCleanup } from '../lxd';
 import { Socket } from 'node:net';
@@ -76,10 +67,13 @@ export class Router {
         this.app.set('trust proxy', 1);
 
         /* save persistent sessions in mongo */
+        type MongoStoreOptions = Parameters<typeof MongoStore.create>[0];
+        const sessionClient = db.client as unknown as NonNullable<MongoStoreOptions['client']>; // align with connect-mongo's MongoClient declaration
+
         this.app.use(
             session({
                 store: process.env['NODE_ENV'] === 'test' ? undefined : MongoStore.create({
-                    client: db.client,
+                    client: sessionClient,
                     collectionName: config.database.collections['sessions_collection']
                 }),
                 secret: this.config.sessionsSecret,
@@ -164,92 +158,7 @@ export class Router {
 
         const apiCalls = new APICalls();
 
-        /* putting schema together */
-        const schema = makeExecutableSchema({
-            typeDefs,
-            resolvers: {
-                ...apiCalls._listOfGraphqlResolvers(),
-                BigInt: scalarResolvers,
-                // This maps the `Upload` scalar to the implementation provided
-                // by the `graphql-upload` package.
-                Upload: GraphQLUpload
-            }
-        });
-
-        /* register apolloserver for graphql requests */
-        const gqlServer = new ApolloServer<ApolloServerContext>({
-            schema,
-            csrfPrevention: false,
-            allowBatchedHttpRequests: true,
-            plugins: [
-                {
-                    async serverWillStart() {
-                        await logPluginInstance.serverWillStartLogPlugin();
-                        return {
-                            async drainServer() {
-                                await serverCleanup.dispose();
-                            }
-                        };
-                    },
-                    async requestDidStart() {
-                        const startTime = Date.now();
-                        return {
-                            async executionDidStart(requestContext) {
-                                const operation = requestContext.operationName;
-                                const actionData = requestContext.request.variables;
-                                requestContext.request.variables = operation ? spaceFixing(operation, actionData) : undefined;
-                            },
-                            async willSendResponse(requestContext) {
-                                const executionTime = Date.now() - startTime;
-                                await logPluginInstance.requestDidStartLogPlugin(requestContext, startTime, executionTime);
-                            }
-                        };
-                    }
-                },
-                ApolloServerPluginDrainHttpServer({ httpServer: this.server })
-            ],
-            formatError: (error) => {
-                // TO_DO: generate a ref uuid for errors so the clients can contact admin
-                // TO_DO: check if the error is not thrown my me manually then switch to generic error to client and log
-                // Logger().error(error);
-                return error;
-            }
-        });
-
-        await gqlServer.start();
-
-        this.app.use(
-            '/graphql',
-            express.json(),
-            graphqlUploadExpress(),
-            expressMiddleware(gqlServer, {
-                context: async ({ req, res }): Promise<DMPContext> => {
-                    return ({ req, res });
-                }
-            })
-        );
-
-        /* register the graphql subscription functionalities */
-        const graphqlWsServer = new WebSocketServer({
-            noServer: true // We'll handle upgrades manually
-        });
-
-
-        // Passing in an instance of a GraphQLSchema and
-        // telling the WebSocketServer to start listening
-        const serverCleanup = useServer({ schema: schema, execute: execute, subscribe: subscribe }, graphqlWsServer);
-
-        /* Bounce all unauthenticated non-graphql HTTP requests */
-        // this.app.use((req: Request, res: Response, next: NextFunction) => {
-        //     if (req.user === undefined || req.user.username === undefined) {
-        //         res.status(401).json(new CustomError('Please log in first.'));
-        //         return;
-        //     }
-        //     next();
-        // });
-
         // webdav
-
         const webdav_target = `http://localhost:${this.config.webdavPort}`;
         const webdav_proxy = createProxyMiddleware({
             target: webdav_target,
@@ -401,12 +310,7 @@ export class Router {
         // Upgrade handler for WebSocket requests
         this.server.on('upgrade', (req, socket: Socket, head: Buffer) => {
 
-            if (req.url?.startsWith('/graphql')) {
-                // Handle GraphQL WebSocket connection for subscriptions
-                graphqlWsServer.handleUpgrade(req, socket, head, (ws) => {
-                    graphqlWsServer.emit('connection', ws, req); // Forward the upgrade to the GraphQL WebSocket server
-                });
-            } else if (req.url?.startsWith('/jupyter')) {
+            if (req.url?.startsWith('/jupyter')) {
                 const instance_id = req.url.split('/')[2];  // Extract instance ID from the URL
 
                 if (!instance_id) {

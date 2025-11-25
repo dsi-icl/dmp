@@ -1,6 +1,4 @@
 import { CoreError, IStandardization, IUserWithoutToken, enumCoreErrors, enumStudyRoles } from '@itmat-broker/itmat-types';
-import { GraphQLError } from 'graphql';
-import { errorCodes } from '../utils/errors';
 import { v4 as uuid } from 'uuid';
 import { makeGenericResponse } from '../utils/responses';
 import { DBType } from '../database/database';
@@ -40,7 +38,7 @@ export class StandarizationCore {
 
         /* check permission */
         const roles = await this.permissionCore.getRolesOfUser(requester, studyId);
-        if (!roles.length) { throw new GraphQLError(errorCodes.NO_PERMISSION_ERROR); }
+        if (!roles.length) { throw new CoreError(enumCoreErrors.NO_PERMISSION_ERROR, enumCoreErrors.NO_PERMISSION_ERROR); }
 
         const study = (await this.studyCore.getStudies(requester, studyId))[0];
 
@@ -91,7 +89,7 @@ export class StandarizationCore {
         /* check study exists */
         const studySearchResult = await this.db.collections.studies_collection.findOne({ id: studyId, deleted: null });
         if (studySearchResult === null || studySearchResult === undefined) {
-            throw new GraphQLError('Study does not exist.', { extensions: { code: errorCodes.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY } });
+            throw new CoreError(enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY, 'Study does not exist.');
         }
         const stdRulesWithId = [...standardization.stdRules];
         stdRulesWithId.forEach(el => {
@@ -125,21 +123,21 @@ export class StandarizationCore {
 
     public async deleteStandardization(requester: IUserWithoutToken | undefined, studyId, type, field) {
         if (!requester) {
-            throw new GraphQLError(errorCodes.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY);
+            throw new CoreError(enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY, enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY);
         }
         /* check permission */
         const roles = await this.permissionCore.getRolesOfUser(requester, studyId);
-        if (!roles.length) { throw new GraphQLError(errorCodes.NO_PERMISSION_ERROR); }
+        if (!roles.length) { throw new CoreError(enumCoreErrors.NO_PERMISSION_ERROR, enumCoreErrors.NO_PERMISSION_ERROR); }
         /* check study exists */
         const studySearchResult = await this.db.collections.studies_collection.findOne({ id: studyId, deleted: null });
         if (studySearchResult === null || studySearchResult === undefined) {
-            throw new GraphQLError('Study does not exist.', { extensions: { code: errorCodes.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY } });
+            throw new CoreError(enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY, 'Study does not exist.');
         }
 
         // check type exists
         const types: string[] = await this.db.collections.standardizations_collection.distinct('type', { studyId: studyId, deleted: null });
         if (!types.includes(type)) {
-            throw new GraphQLError('Type does not exist.', { extensions: { code: errorCodes.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY } });
+            throw new CoreError(enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY, 'Type does not exist.');
         }
         const result = await this.db.collections.standardizations_collection.findOneAndUpdate({ studyId: studyId, field: field, type: type, dataVersion: null }, {
             $set: {

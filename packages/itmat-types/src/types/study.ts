@@ -1,11 +1,4 @@
 import { IBase } from './base';
-import { FileUpload } from 'graphql-upload-minimal';
-
-export enum studyType {
-    SENSOR = 'SENSOR',
-    CLINICAL = 'CLINICAL',
-    ANY = 'ANY'
-}
 
 export interface IStudy extends IBase {
     name: string;
@@ -37,20 +30,6 @@ export interface IProject {
     lastModified: number;
     deleted: number | null;
     metadata: Record<string, unknown>
-}
-
-export interface IDataClip {
-    fieldId: string;
-    value: string;
-    subjectId: string;
-    visitId: string;
-    file?: FileUpload;
-    metadata?: {
-        startDate?: number;
-        endDate?: number;
-        deviceId?: string;
-        [key: string]: unknown
-    }
 }
 
 export interface ISubjectDataRecordSummary {

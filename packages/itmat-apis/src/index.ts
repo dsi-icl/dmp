@@ -1,14 +1,3 @@
-// graphql
-export * from './graphql/resolvers/fileResolvers';
-export * from './graphql/resolvers/jobResolvers';
-export * from './graphql/resolvers/logResolvers';
-export * from './graphql/resolvers/organisationResolvers';
-export * from './graphql/resolvers/permissionResolvers';
-export * from './graphql/resolvers/pubkeyResolvers';
-export * from './graphql/resolvers/standardizationResolvers';
-export * from './graphql/resolvers/studyResolvers';
-export * from './graphql/resolvers/userResolvers';
-export * from './graphql/index';
 // trpc
 export * from './trpc/configProcedure';
 export * from './trpc/dataProcedure';

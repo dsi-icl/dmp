@@ -1,5 +1,3 @@
-// GraphQLCore
-export * from './utils/GraphQL';
 // TRPCCore
 export * from './coreFunc/configCore';
 export * from './coreFunc/driveCore';
@@ -17,7 +15,6 @@ export * from './coreFunc/standardizationCore';
 export * from './coreFunc/utilsCore';
 export * from './rest/fileDownload';
 export * from './authentication/pubkeyAuthentication';
-export * from './log/logPlugin';
 export * from './database/database';
 export * from './utils';
 // webdav

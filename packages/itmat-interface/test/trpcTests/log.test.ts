@@ -77,8 +77,8 @@ if (global.hasMinio) {
                 .query({});
             const log = await db.collections.log_collection.find({}).toArray();
             // start server; two login logs, and this new log
-            expect(log).toHaveLength(4);
-            expect(log[3].event).toBe('study.getStudies');
+            expect(log).toHaveLength(3);
+            expect(log[2].event).toBe('study.getStudies');
         });
         test('Write log (mutation)', async () => {
             const filePath = path.join(__dirname, '../filesForTests/dsi.jpeg');
