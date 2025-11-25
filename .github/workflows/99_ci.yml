@@ -19,7 +19,7 @@ jobs:
               uses: nrwl/nx-set-shas@v4
               with:
                   main-branch-name: master
-                  error-on-no-successful-workflow: true
+                  error-on-no-successful-workflow: false
 
             - run: |
                   echo "Nx base: ${{ env.NX_BASE }}"
