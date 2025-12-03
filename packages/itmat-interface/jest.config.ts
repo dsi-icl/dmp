@@ -1,8 +1,8 @@
+console.log('uuid', require.resolve('uuid'));
 /* eslint-disable */
 export default {
     displayName: 'itmat-interface',
-    preset: '../../jest.preset.js',
-    verbose: true,
+    preset: '../../jest.preset.cjs',
     transform: {
         '^.+\\.[tj]s$': ['ts-jest', {
             tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -19,5 +19,6 @@ export default {
     moduleNameMapper: {
         // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
         "uuid": require.resolve('uuid'),
-    }
+    },
+    setupFilesAfterEnv: ["<rootDir>/test/setupTests.ts"]
 };
