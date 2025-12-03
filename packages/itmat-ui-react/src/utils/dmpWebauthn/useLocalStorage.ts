@@ -17,6 +17,11 @@ export function useLocalForage<D>(key: string, initialValue: D, errorHandler?: E
     const _errorHandler = useRef(
         (typeof errorHandler == 'undefined' || errorHandler == null) ? defaultErrorHandler : errorHandler
     );
+    const initialValueRef = useRef(initialValue);
+
+    useEffect(() => {
+        initialValueRef.current = initialValue;
+    }, [initialValue]);
 
     const error = (e?: Error) => {
         _errorHandler.current(e);
@@ -26,7 +31,7 @@ export function useLocalForage<D>(key: string, initialValue: D, errorHandler?: E
         (async function () {
             try {
                 const value: D | null = await localForage.getItem(key);
-                setStoredValue(value == null ? initialValue : value);
+                setStoredValue(value == null ? initialValueRef.current : value);
             } catch (e) {
                 error(e as Error);
             } finally {
@@ -36,7 +41,7 @@ export function useLocalForage<D>(key: string, initialValue: D, errorHandler?: E
             error(e as Error);
             setIsLoading(false); // Ensure loading ends in case of an error
         });
-    }, [initialValue, key]);
+    }, [key]);
 
     // set value to local storage, may be async
     const setValue = useCallback((value: D) => {

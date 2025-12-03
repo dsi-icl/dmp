@@ -31,9 +31,6 @@
       "@itmat-broker/itmat-cores": [
         "packages/itmat-cores/src/index.ts"
       ],
-      "@itmat-broker/itmat-models": [
-        "packages/itmat-models/src/index.ts"
-      ],
       "@itmat-broker/itmat-setup": [
         "packages/itmat-setup/src/index.ts"
       ],

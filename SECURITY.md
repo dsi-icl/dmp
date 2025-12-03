@@ -12,5 +12,4 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Please use <ideafast@imperial.ac.uk> to report security issues to you deem sensitive.
-Otherwise, please feel free to use GitHub issues to let us know of any potential problem.
+Please feel free to use GitHub issues to let us know of any potential problem.

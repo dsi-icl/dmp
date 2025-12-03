@@ -748,7 +748,8 @@ export class DataCore {
      *
      * @return Partial<IData>[] - The list of objects of Partial<IData>
      */
-    public async getData(requester: IUserWithoutToken | undefined, studyId: string, selectedFieldIds?: string[], dataVersion?: string | null | Array<string | null>, aggregation?: Record<string, Array<{ operationName: enumDataTransformationOperation, params: Record<string, unknown> }>>, useCache?: boolean, forceUpdate?: boolean, fromCold?: boolean) {
+    public async getStudyData(requester: IUserWithoutToken | undefined, studyId: string, selectedFieldIds?: string[], dataVersion?: string | null | Array<string | null>, aggregation?: Record<string, Array<{ operationName: enumDataTransformationOperation, params: Record<string, unknown> }>>, useCache?: boolean, forceUpdate?: boolean, fromCold?: boolean) {
+        console.time('label 1');
         if (!requester) {
             throw new CoreError(
                 enumCoreErrors.NOT_LOGGED_IN,
@@ -799,7 +800,7 @@ export class DataCore {
         let hash: string;
         if (useCache) {
             hash = this.utilsCore.computeHash({
-                query: 'getData',
+                query: 'getStudyData',
                 requester: requester.id,
                 studyId: studyId,
                 fieldIds: fieldIds,
@@ -828,7 +829,7 @@ export class DataCore {
                     },
                     status: enumCacheStatus.INUSE,
                     keys: {
-                        query: 'getData',
+                        query: 'getStudyData',
                         requester: requester,
                         studyId: studyId,
                         fieldIds: fieldIds,
@@ -982,152 +983,7 @@ export class DataCore {
     }
 
     /**
-     * Get the latest files of a study. Note in this case the file will have a version. This function reuse the getData function.
-     *
-     * @param requester - The requester.
-     * @param studyId - The id of the study.
-     * @param selectedFieldIds - The list of regular expressions of fields to return.
-     * @param dataVersion - The list of data versions to return.
-     * @returns IFile[] - The list of objects of IFile
-     */
-    public async getStudyFilesLatest(requester: IUserWithoutToken | undefined, studyId: string, selectedFieldIds?: string[], dataVersion?: string | null | Array<string | null>, readable?: boolean, useCache?: boolean, forceUpdate?: boolean) {
-        if (!requester) {
-            throw new CoreError(
-                enumCoreErrors.NOT_LOGGED_IN,
-                enumCoreErrors.NOT_LOGGED_IN
-            );
-        }
-        const roles = (await this.permissionCore.getRolesOfUser(requester, requester.id, studyId));
-        if (roles.length === 0) {
-            throw new CoreError(
-                enumCoreErrors.NO_PERMISSION_ERROR,
-                enumCoreErrors.NO_PERMISSION_ERROR
-            );
-        }
-
-        const study = await this.db.collections.studies_collection.findOne({ 'id': studyId, 'life.deletedTime': null });
-        if (!study) {
-            throw new CoreError(
-                enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY,
-                'Study does not exist.'
-            );
-        }
-
-        const config = await this.db.collections.configs_collection.findOne({ type: enumConfigType.STUDYCONFIG, key: studyId });
-        if (!config) {
-            throw new CoreError(
-                enumCoreErrors.CLIENT_ACTION_ON_NON_EXISTENT_ENTRY,
-                'Study config not found.'
-            );
-        }
-
-        const readFiles = async () => {
-            let fieldIds: string[] | undefined = selectedFieldIds;
-            let availableDataVersions: Array<string | null> = [];
-            if (dataVersion === null) {
-                availableDataVersions.push(null);
-            } else if (typeof dataVersion === 'string') {
-                availableDataVersions.push(dataVersion);
-            } else if (Array.isArray(dataVersion)) {
-                availableDataVersions.push(...dataVersion);
-            } else {
-                availableDataVersions = (study.currentDataVersion === -1 ? [] : study.dataVersions.filter((__unused__el, index) => index <= study.currentDataVersion)).map(el => el.id);
-                availableDataVersions.push(null);
-            }
-            if (!fieldIds) {
-                fieldIds = (await this.getStudyFields(requester, studyId, availableDataVersions)).filter(el => el.dataType === enumDataTypes.FILE).map(el => el.fieldId);
-            } else {
-                const fields = await this.db.collections.field_dictionary_collection.find({ studyId: studyId, fieldId: { $in: fieldIds } }).toArray();
-                fieldIds = fields.filter(el => el.dataType === enumDataTypes.FILE).map(el => el.fieldId);
-            }
-            if (fieldIds.length === 0) {
-                return [];
-            }
-            const fileDataRecords: IData[] = (await this.getDataLatest(
-                requester,
-                studyId,
-                fieldIds
-            )) as unknown as IData[];
-            if (!Array.isArray(fileDataRecords)) {
-                return [];
-            }
-            const batchSize = 10000; // Define a suitable batch size
-            const promises: Promise<Partial<IFile>[]>[] = [];
-
-            for (let i = 0; i < fileDataRecords.length; i += batchSize) {
-                const batchIds = fileDataRecords.slice(i, i + batchSize).map(el => String(el.value));
-                const promise = this.db.collections.files_collection.find({ id: { $in: batchIds } }, { allowDiskUse: true })
-                    .project({
-                        '_id': 0,
-                        'fileType': 0,
-                        'fileCategory': 0,
-                        'sharedUsers': 0,
-                        'life.deletedTime': 0,
-                        'life.deletedUser': 0
-                    }).toArray();
-                promises.push(promise);
-            }
-
-            const files = (await Promise.all(promises)).flat(); // Flatten the array of arrays
-            if (readable) {
-                const users = await this.db.collections.users_collection.find({}).toArray();
-                const edited = [...files];
-                for (const file of edited) {
-                    const user = users.find(el => el.id === file.life?.createdUser);
-                    if (file.life) {
-                        file.life.createdUser = user ? `${user.firstname} ${user.lastname}` : file.life?.createdUser;
-                    }
-                }
-                return edited;
-            } else {
-                return files;
-            }
-        };
-
-        if (useCache) {
-            const hash = this.utilsCore.computeHash({
-                query: 'getStudyFiles',
-                studyId: studyId,
-                roles: roles,
-                fieldIds: selectedFieldIds
-            });
-            const hashedInfo = await this.db.collections.cache_collection.find({ 'keyHash': hash, 'life.deletedTime': null, 'status': enumCacheStatus.INUSE }).sort({ 'life.createdTime': -1 }).limit(1).toArray();
-            // if hash is not found, generate the new summary and cache it
-            if (forceUpdate || !hashedInfo || hashedInfo.length === 0) {
-                const newFiles = await readFiles();
-                const info = await convertToBufferAndUpload(this.fileCore, requester, { files: newFiles });
-                await this.db.collections.cache_collection.insertOne({
-                    id: uuid(),
-                    keyHash: hash,
-                    uri: info.uri,
-                    status: enumCacheStatus.INUSE,
-                    keys: {
-                        query: 'getStudyFiles',
-                        studyId: studyId,
-                        roles: roles,
-                        fieldIds: selectedFieldIds
-                    },
-                    type: enumCacheType.API,
-                    life: {
-                        createdTime: Date.now(),
-                        createdUser: requester.id,
-                        deletedTime: null,
-                        deletedUser: null
-                    },
-                    metadata: {}
-                });
-                return newFiles;
-            } else {
-                return ((await getJsonFileContents(this.objStore, 'cache', hashedInfo[0].uri)) as unknown as { files: IFile[] }).files;
-            }
-        } else {
-            return await readFiles();
-        }
-
-    }
-
-    /**
-     * Get the files of a study. This function reuse the getData function.
+     * Get the files of a study. This function reuse the getStudyData function.
      *
      * @param requester - The requester.
      * @param studyId - The id of the study.
@@ -1188,7 +1044,7 @@ export class DataCore {
             if (fieldIds.length === 0) {
                 return [];
             }
-            const fileDataRecords: IData[] = (await this.getData(
+            const fileDataRecords: IData[] = (await this.getStudyData(
                 requester,
                 studyId,
                 fieldIds,
@@ -1315,6 +1171,8 @@ export class DataCore {
         }, {});
         const availableFieldIds = Object.keys(availableFields);
         const refactoredFieldIds = fieldIds ?? Object.keys(availableFields);
+        console.timeEnd('label 3.3');
+        console.time('label 3.4');
         const queryField = async (fieldId: string) => {
             if (availableFieldIds.includes(fieldId) || availableFieldIds.some(el => new RegExp(el).test(fieldId))) {
                 const propertyFilter: Record<string, string> = {};
@@ -1690,7 +1548,7 @@ export class DataCore {
                         {
                             $match: {
                                 'parameters.studyId': studyId,
-                                'event': { $in: ['GET_DATA_RECORDS', 'GET_STUDY_FIELDS', 'GET_STUDY', 'data.getStudyFields', 'data.getStudyData', 'data.getStudyDataLatest', 'data.getFiles'] }
+                                'event': { $in: ['GET_DATA_RECORDS', 'GET_STUDY_FIELDS', 'GET_STUDY', 'data.getStudyFields', 'data.getStudyData', 'data.getStudyDataLatest', 'data.getStudyFiles'] }
                             }
                         },
                         {

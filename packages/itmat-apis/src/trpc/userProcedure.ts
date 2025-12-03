@@ -295,9 +295,10 @@ export class UserRouter {
             getAccessToken: this.baseProcedure.input(z.object({
                 username: z.string(),
                 hashedPrivateKey: z.string(),
-                signature: z.string()
+                signature: z.string(),
+                life: z.optional(z.number())
             })).mutation(async (opts) => {
-                return await this.userCore.getAccessToken(opts.input.username, opts.input.hashedPrivateKey, opts.input.signature);
+                return await this.userCore.getAccessToken(opts.input.username, opts.input.hashedPrivateKey, opts.input.signature, opts.input.life);
             }),
             /**
                  * Issue an access token.

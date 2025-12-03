@@ -61,7 +61,7 @@
     ],
     "lxdSquidProxy": "http://traget_ip:3128",
     "lxdStoragePool": "newpool",
-    "lxdProject": "ideafast-staging",
+    "lxdProject": "sample-project",
     "webdavServer": "http://localhost",
     "systemKey":{
         "pubkey": "path/system_key.pub",

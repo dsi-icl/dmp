@@ -101,7 +101,6 @@
     },
     "dependencies": {
         "@ant-design/icons": "5.6.1",
-        "@ideafast/idgen": "0.2.1",
         "@nivo/bar": "0.88.0",
         "@nivo/calendar": "0.88.0",
         "@nivo/core": "0.88.0",

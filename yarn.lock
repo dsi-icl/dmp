@@ -1508,11 +1508,6 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.3.tgz#4a2868d75d6d6963e423bcf90b7fd1be343409d3"
   integrity sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==
 
-"@ideafast/idgen@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@ideafast/idgen/-/idgen-0.2.1.tgz#fbb3658c5c8e18fdf6fb7899edff8d967b5d579d"
-  integrity sha512-BMyuQ9O6hV7dE/DJLPVHnptL3WeCo/9ggBnT7WCd2/nEV8IfsC84snBaqV5s8PZb+u0V5TGBNT4lcrEOCQjD/Q==
-
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"

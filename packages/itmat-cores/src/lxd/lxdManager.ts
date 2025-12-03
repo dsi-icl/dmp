@@ -324,7 +324,7 @@ export class LxdManager {
 
                         // Fall back to URL if no custom IP is set
                         if (response.data.metadata?.url) {
-                            // Extract the host from URL (e.g., "https://ideafast-lxd-c1-0-1:8443" → "ideafast-lxd-c1-0-1")
+                            // Extract the host from URL (e.g., "https://sample-project-lxd-c1-0-1:8443" → "sample-project-lxd-c1-0-1")
                             const url = new URL(response.data.metadata.url);
                             return url.hostname;
                         }

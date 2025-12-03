@@ -9,7 +9,6 @@ import { formatBytes, stringCompareFunc, tableColumnRender } from '../../../../u
 import { UploadChangeParam } from 'antd/lib/upload';
 import { RcFile, UploadFile } from 'antd/lib/upload/interface';
 import axios from 'axios';
-import { validate } from '@ideafast/idgen';
 import dayjs from 'dayjs';
 import Highlighter from 'react-highlight-words';
 import { ResponsiveLine } from '@nivo/line';
@@ -125,7 +124,7 @@ export const UploadFileComponent: FunctionComponent<{ study: IStudy, fields: IFi
                 }
             });
             if (response?.data?.result?.data?.id) {
-                const queryKey = [['data', 'getFiles'], {
+                const queryKey = [['data', 'getStudyFiles'], {
                     input: {
                         studyId: study.id,
                         fieldIds: fieldIds,
@@ -136,7 +135,7 @@ export const UploadFileComponent: FunctionComponent<{ study: IStudy, fields: IFi
                 const cache: IFile[] = queryClient.getQueryData(queryKey) ?? [];
                 const newCache = [...cache, response.data.result.data];
                 queryClient.setQueryData(queryKey, newCache);
-                void queryClient.invalidateQueries(['data', 'getFiles', {
+                void queryClient.invalidateQueries(['data', 'getStudyFiles', {
                     input: {
                         studyId: study.id,
                         fieldIds: fieldIds,
@@ -207,10 +206,8 @@ export const UploadFileComponent: FunctionComponent<{ study: IStudy, fields: IFi
                                 return;
                             }
                             if (particules?.length === 8) {
-                                if (validate(particules[2].toUpperCase()))
-                                    properties.subjectId = `${particules[1].toUpperCase()}${particules[2].toUpperCase()}`;
-                                if (validate(particules[4].toUpperCase()))
-                                    properties.deviceId = `${particules[3].toUpperCase()}${particules[4].toUpperCase()}`;
+                                properties.subjectId = `${particules[1].toUpperCase()}${particules[2].toUpperCase()}`;
+                                properties.deviceId = `${particules[3].toUpperCase()}${particules[4].toUpperCase()}`;
                                 const startDate = dayjs(particules[5], 'YYYYMMDD');
                                 const endDate = dayjs(particules[6], 'YYYYMMDD');
                                 if (startDate.isSame(endDate) || startDate.isBefore(endDate)) {
@@ -295,10 +292,10 @@ export const FileBlock: FunctionComponent<{ user: IUserWithoutToken, fields: IFi
     const [progress, setProgress] = useState(0);
     const [searchedKeyword, setSearchedKeyword] = useState<string | undefined>(undefined);
     const [isModalOn, setIsModalOn] = useState(false);
-    const getFiles = trpc.data.getFiles.useQuery({ studyId: study.id, fieldIds: block.fieldIds, readable: true, useCache: false });
+    const getStudyFiles = trpc.data.getStudyFiles.useQuery({ studyId: study.id, fieldIds: block.fieldIds, readable: true, useCache: false });
     const deleteFile = trpc.data.deleteFile.useMutation({
         onSuccess: (data) => {
-            const queryKey = [['data', 'getFiles'], {
+            const queryKey = [['data', 'getStudyFiles'], {
                 input: {
                     studyId: study.id,
                     fieldIds: fields.map(el => el.fieldId),
@@ -309,7 +306,7 @@ export const FileBlock: FunctionComponent<{ user: IUserWithoutToken, fields: IFi
             const cache: IFile[] = queryClient.getQueryData(queryKey) ?? [];
             const newCache = cache.filter(el => el.id !== data.id);
             queryClient.setQueryData(queryKey, newCache);
-            void queryClient.invalidateQueries(['data', 'getFiles', {
+            void queryClient.invalidateQueries(['data', 'getStudyFiles', {
                 input: {
                     studyId: study.id,
                     fieldIds: fields.map(el => el.fieldId),
@@ -323,10 +320,10 @@ export const FileBlock: FunctionComponent<{ user: IUserWithoutToken, fields: IFi
             void message.error('Failed to delete file.');
         }
     });
-    if (getFiles.isLoading) {
+    if (getStudyFiles.isLoading) {
         return <LoadSpinner />;
     }
-    if (getFiles.isError) {
+    if (getStudyFiles.isError) {
         return <div>An error occured.</div>;
     }
 
@@ -342,7 +339,7 @@ export const FileBlock: FunctionComponent<{ user: IUserWithoutToken, fields: IFi
         });
     }
 
-    const filteredFiles = getFiles.data?.filter(el => {
+    const filteredFiles = getStudyFiles.data?.filter(el => {
         if (!searchedKeyword) {
             return true;
         } else {
