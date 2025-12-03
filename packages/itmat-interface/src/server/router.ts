@@ -269,10 +269,33 @@ export class Router {
 
         // set up the proxy and register directly, combine the grapgql's websocket and lxd's websocket
 
+        // Rate limiting for proxy routes (more restrictive due to expensive operations)
+        const proxyRateLimiter = rateLimit({
+            windowMs: 1 * 60 * 1000, // 1 minute
+            max: async function (req) {
+                // More restrictive limits for proxy operations
+                const baseLimit = 200; // Base limit of 200 requests per minute
+                if (req.user?.type === enumUserTypes.ADMIN) {
+                    return 500; // Admins get higher limit
+                }
+                if (req.user) {
+                    const userConfig = await db.collections.configs_collection.findOne({ type: enumConfigType.USERCONFIG, key: req.user.id });
+                    if (userConfig) {
+                        const userQPS = (userConfig.properties as IUserConfig).defaultMaximumQPS;
+                        // Convert QPS to requests per minute, but cap at reasonable proxy limit
+                        return Math.min(Math.floor((userQPS ?? baseLimit) * 60), 1000);
+                    }
+                }
+                return baseLimit;
+            },
+            standardHeaders: true,
+            legacyHeaders: false
+        });
+
         // Setup HTTP route handlers for Jupyter proxy requests
         const proxyRoutes = ['/jupyter/:instance_id', '/jupyter/:instance_id/*'];
         proxyRoutes.forEach((route) => {
-            this.app.use(route, (req, res, next) => {
+            this.app.use(route, proxyRateLimiter, (req, res, next) => {
                 jupyterProxyMiddleware(req, res, next, apiCalls.instanceCore).catch(next);
             });
         });
@@ -280,7 +303,7 @@ export class Router {
         // Add VNC proxy routes
         const vncProxyRoutes = ['/matlab/:instance_id', '/matlab/:instance_id/*'];
         vncProxyRoutes.forEach((route) => {
-            this.app.use(route, (req, res, next) => {
+            this.app.use(route, proxyRateLimiter, (req, res, next) => {
                 vncProxyMiddleware(req, res, next, apiCalls.instanceCore).catch(next);
             });
         });
