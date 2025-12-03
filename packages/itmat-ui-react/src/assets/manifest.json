@@ -1,6 +1,6 @@
 {
-    "short_name": "IDEAFast",
-    "name": "IDEAFast Data Management Portal",
+    "short_name": "DMP",
+    "name": "Data Science Institute Data Management Portal",
     "icons": [
         {
             "src": "favicon.ico",
