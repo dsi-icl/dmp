@@ -199,7 +199,6 @@ export class DataRouter {
                 forceUpdate: z.optional(z.boolean()),
                 fromCold: z.optional(z.boolean())
             })).query(async (opts) => {
-                console.log('dataproc: getStudyData');
                 return await this.dataCore.getStudyData(
                     opts.ctx.req.user,
                     opts.input.studyId,
