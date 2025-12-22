@@ -3516,10 +3516,10 @@
     "@types/express-serve-static-core" "*"
     "@types/node" "*"
 
-"@types/connect-timeout@0.0.39":
-  version "0.0.39"
-  resolved "https://registry.yarnpkg.com/@types/connect-timeout/-/connect-timeout-0.0.39.tgz#8b6800599808688ae74d1352e702a24d2cca4ee1"
-  integrity sha512-PHUX9yixjm4qjQ27Uz+F5cyG9Fio9iY7e6eWHvNT0wbA8eu9JaDqxRRiXn5uYnd09zx1fM+wEHnuBHMm9gwOuQ==
+"@types/connect-timeout@1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@types/connect-timeout/-/connect-timeout-1.9.0.tgz#fba5eb706b1274269af5a5be37ee9219dd54da0c"
+  integrity sha512-tKAbro0/ATFeaSVa/N3Gv981+7KbuNQjoZEW8uI4NEdyxquWnylC5UTXwIOc2HD2q22ZjLr8H5YVKZL2+pGBGw==
   dependencies:
     "@types/express" "*"
 
@@ -5766,15 +5766,15 @@ connect-mongo@5.1.0:
     debug "^4.3.1"
     kruptein "^3.0.0"
 
-connect-timeout@1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/connect-timeout/-/connect-timeout-1.9.0.tgz#bc27326b122103714bebfa0d958bab33f6522e3a"
-  integrity sha512-q4bsBIPd+eSGtnh/u6EBOKfuG+4YvwsN0idlOsg6KAw71Qpi0DCf2eCc/Va63QU9qdOeYC8katxoC+rHMNygZg==
+connect-timeout@1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/connect-timeout/-/connect-timeout-1.9.1.tgz#2d371c5c0e33ac5fb2bb2fc83636ac9245fbdd62"
+  integrity sha512-kDcadOXwOu+EEVs31iOu0TOg1yyRTqSNfyJaHYm5Z4K/hEIi9HJXSOWP9d+WQr/wff7wQJRh/HX63vK1+wBErw==
   dependencies:
     http-errors "~1.6.1"
     ms "2.0.0"
     on-finished "~2.3.0"
-    on-headers "~1.0.1"
+    on-headers "~1.1.0"
 
 console-control-strings@^1.0.0, console-control-strings@^1.1.0:
   version "1.1.0"
@@ -10596,7 +10596,7 @@ on-finished@~2.3.0:
   dependencies:
     ee-first "1.1.1"
 
-on-headers@~1.0.1, on-headers@~1.0.2:
+on-headers@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/on-headers/-/on-headers-1.0.2.tgz#772b0ae6aaa525c399e489adfad90c403eb3c28f"
   integrity sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==
