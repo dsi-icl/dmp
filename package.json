@@ -94,7 +94,7 @@
         "ts-essentials": "10.0.4",
         "ts-jest": "29.2.6",
         "ts-node": "10.9.2",
-        "typescript": "5.8.2",
+        "typescript": "5.8.3",
         "url-loader": "^4.1.1",
         "webpack": "^5.98.0",
         "webpack-merge": "^6.0.1"
