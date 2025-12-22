@@ -4674,12 +4674,12 @@ ansi-styles@^6.0.0, ansi-styles@^6.1.0, ansi-styles@^6.2.1:
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.3.tgz#c044d5dcc521a076413472597a1acb1f103c4041"
   integrity sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==
 
-antd-img-crop@4.24.0:
-  version "4.24.0"
-  resolved "https://registry.yarnpkg.com/antd-img-crop/-/antd-img-crop-4.24.0.tgz#7b7a2c8d14482cbd9d37bfc685c10eadf901078c"
-  integrity sha512-RqY/XqvmUnHlj7oLV2kN/ytdZdHUFAZyM3TN+QlTlLrze1Q74isAePgG+QTkLAbrkR9L/IgVRpjsuH/nevpU7Q==
+antd-img-crop@4.27.0:
+  version "4.27.0"
+  resolved "https://registry.yarnpkg.com/antd-img-crop/-/antd-img-crop-4.27.0.tgz#9531cf3c18f5268f04875dfca79b1b4327284d72"
+  integrity sha512-NcFxEBex/8HSs6I43mYHfwD7+l7XqGXR88oIhtO17abBEdmgDVdTNjApRJAez7HCBZeBhPIMQkA4HfFzR0ouGQ==
   dependencies:
-    react-easy-crop "^5.2.0"
+    react-easy-crop "^5.5.3"
     tslib "^2.8.1"
 
 antd@5.24.2:
@@ -11767,10 +11767,10 @@ react-dropzone@14.3.8:
     file-selector "^2.1.0"
     prop-types "^15.8.1"
 
-react-easy-crop@^5.2.0:
-  version "5.5.5"
-  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-5.5.5.tgz#56f5aea8f122fc91562ceaed52b27cc5ffc48e95"
-  integrity sha512-aRiY8CnsHir4cmoPaXbZW0Hpmy0Wd+7mxZbALx/+rxvAIIy0hesK48hCBjorAt9Kl9dA8IskWnhOq3ky44coLA==
+react-easy-crop@^5.5.3:
+  version "5.5.6"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-5.5.6.tgz#1a1ea3a90f83559d93b0636a5d984df143b40fe4"
+  integrity sha512-Jw3/ozs8uXj3NpL511Suc4AHY+mLRO23rUgipXvNYKqezcFSYHxe4QXibBymkOoY6oOtLVMPO2HNPRHYvMPyTw==
   dependencies:
     normalize-wheel "^1.0.1"
     tslib "^2.0.1"
