@@ -46,16 +46,6 @@ export class FileDownloadController {
                 }
             };
 
-            // Handle authentication first, before any file operations
-            if (!requester && token === '') {
-                res.status(403).json({ error: 'Please log in.' });
-                await this._db.collections.log_collection.insertOne({
-                    ...log,
-                    errors: 'Please log in.'
-                });
-                return;
-            }
-
             const file = await this._db.collections.files_collection.findOne({ 'id': requestedFile, 'life.deletedTime': null });
 
             if (!file || file.fileCategory !== enumFileCategories.DOMAIN_FILE) {
